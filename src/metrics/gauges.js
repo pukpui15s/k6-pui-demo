@@ -28,6 +28,12 @@ const memoryBytes = new client.Gauge({
   labelNames: ['type'], // resident, heap_used, heap_total, external
 });
 
+// ----- RAM max (จาก ENV — ใช้คำนวณ % ใน Grafana ได้) -----
+const processResidentMemoryMaxBytes = new client.Gauge({
+  name: METRICS_PREFIX + 'process_resident_memory_max_bytes',
+  help: 'Memory limit in bytes (from MEMORY_LIMIT_MB or MEMORY_LIMIT_BYTES), for % formula in Grafana',
+});
+
 // ----- เวลา save/อัปเดต metrics ล่าสุด -----
 const lastUpdateSeconds = new client.Gauge({
   name: METRICS_PREFIX + 'metrics_last_update_timestamp_seconds',
@@ -40,5 +46,6 @@ module.exports = {
   diskFree,
   diskTotal,
   memoryBytes,
+  processResidentMemoryMaxBytes,
   lastUpdateSeconds,
 };

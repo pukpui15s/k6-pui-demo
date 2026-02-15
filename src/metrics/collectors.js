@@ -10,6 +10,7 @@ const {
   diskFree,
   diskTotal,
   memoryBytes,
+  processResidentMemoryMaxBytes,
   lastUpdateSeconds,
 } = require('./gauges');
 
@@ -37,12 +38,31 @@ async function updateDisk(path = DISK_PATH) {
 }
 
 // ----- RAM (จำนวนแรม) -----
+function parseMemoryLimitBytes() {
+  const mb = process.env.MEMORY_LIMIT_MB;
+  const bytes = process.env.MEMORY_LIMIT_BYTES;
+  if (bytes != null && bytes !== '') {
+    const n = Number(bytes);
+    return Number.isFinite(n) ? n : null;
+  }
+  if (mb != null && mb !== '') {
+    const n = Number(mb);
+    return Number.isFinite(n) ? n * 1024 * 1024 : null;
+  }
+  return null;
+}
+
 function updateMemory() {
   const mem = process.memoryUsage();
   memoryBytes.set({ type: 'resident' }, mem.rss);
   memoryBytes.set({ type: 'heap_used' }, mem.heapUsed);
   memoryBytes.set({ type: 'heap_total' }, mem.heapTotal);
   memoryBytes.set({ type: 'external' }, mem.external);
+
+  const maxBytes = parseMemoryLimitBytes();
+  if (maxBytes != null) {
+    processResidentMemoryMaxBytes.set(maxBytes);
+  }
 }
 
 // ----- เวลา save ล่าสุด -----
