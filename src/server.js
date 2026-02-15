@@ -4,8 +4,11 @@
  */
 
 const express = require('express');
+const client = require('prom-client');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+client.collectDefaultMetrics({ prefix: 'myapp_' });
 
 // Middleware
 app.use(express.json());
@@ -87,6 +90,15 @@ app.get('/api/slow', (req, res) => {
   }, Math.min(delay, 3000)); // จำกัดสูงสุด 3 วินาที
 });
 
+// GET /metrics - Prometheus metrics (ต้องส่ง header x-metrics-token ตรงกับ METRICS_TOKEN)
+app.get('/metrics', async (req, res) => {
+  if (req.header('x-metrics-token') !== process.env.METRICS_TOKEN) {
+    return res.status(401).send('unauthorized');
+  }
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server รันที่ http://localhost:${PORT}`);
@@ -95,4 +107,5 @@ app.listen(PORT, () => {
   console.log(`   - GET  /api/users/:id - ผู้ใช้ตาม ID`);
   console.log(`   - POST /api/users - สร้างผู้ใช้`);
   console.log(`   - GET  /api/slow?delay=500 - ทดสอบ latency`);
+  console.log(`   - GET  /metrics (Header: x-metrics-token) - Prometheus metrics`);
 });

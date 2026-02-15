@@ -12,10 +12,16 @@
     "test:spike": "k6 run k6/spike-test.js",
     "test:all": "npm run test:smoke && npm run test:load"
   },
-  "keywords": ["k6", "load-testing", "nodejs", "express"],
+  "keywords": [
+    "k6",
+    "load-testing",
+    "nodejs",
+    "express"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "prom-client": "^15.1.3"
   }
 }
