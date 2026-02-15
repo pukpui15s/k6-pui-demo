@@ -20,7 +20,11 @@
   ],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^4.21.0",
     "prom-client": "^15.1.3"
   }
