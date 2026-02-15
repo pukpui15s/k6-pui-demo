@@ -90,6 +90,27 @@ app.get('/api/slow', (req, res) => {
   }, Math.min(delay, 3000)); // จำกัดสูงสุด 3 วินาที
 });
 
+// GET /api/cpu - กิน CPU เยอะ (ใช้ดูกราฟ CPU ใน Grafana)
+// query: duration=ms (default 2000, max 10000) — ระยะเวลาที่จะคำนวณหนัก
+app.get('/api/cpu', (req, res) => {
+  const durationMs = Math.min(
+    Math.max(parseInt(req.query.duration, 10) || 2000, 100),
+    10000
+  );
+  const start = Date.now();
+  let n = 0;
+  while (Date.now() - start < durationMs) {
+    for (let i = 0; i < 500000; i++) {
+      n += Math.sqrt(i) * Math.sin(i);
+    }
+  }
+  res.json({
+    success: true,
+    duration_ms: Date.now() - start,
+    message: `กิน CPU ประมาณ ${durationMs}ms (ดูกราฟ process_cpu ใน Prometheus/Grafana)`,
+  });
+});
+
 // GET /metrics - Prometheus metrics
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', metrics.getContentType());
@@ -105,5 +126,6 @@ app.listen(PORT, host, () => {
   console.log(`   - GET  /api/users/:id - ผู้ใช้ตาม ID`);
   console.log(`   - POST /api/users - สร้างผู้ใช้`);
   console.log(`   - GET  /api/slow?delay=500 - ทดสอบ latency`);
+  console.log(`   - GET  /api/cpu?duration=2000 - กิน CPU (ดูกราฟ)`);
   console.log(`   - GET  /metrics - Prometheus metrics`);
 });

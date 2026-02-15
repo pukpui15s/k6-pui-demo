@@ -32,11 +32,13 @@ export default function () {
     ['GET', `${BASE_URL}/`],
     ['GET', `${BASE_URL}/api/users`],
     ['GET', `${BASE_URL}/api/users/1`],
+    ['GET', `${BASE_URL}/api/cpu?duration=1500`],
   ]);
 
   check(responses[0], { 'home ok': ok });
   check(responses[1], { 'users ok': ok });
   check(responses[2], { 'user 1 ok': ok });
+  check(responses[3], { 'cpu ok': ok });
 
   sleep(0.5);
 }

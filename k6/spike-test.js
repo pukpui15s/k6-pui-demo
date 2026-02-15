@@ -23,5 +23,7 @@ export const options = {
 export default function () {
   const res = http.get(`${BASE_URL}/api/users`);
   check(res, { 'status 200': (r) => r != null && r.status === 200 });
+  const cpuRes = http.get(`${BASE_URL}/api/cpu?duration=1500`);
+  check(cpuRes, { 'cpu status 200': (r) => r != null && r.status === 200 });
   sleep(0.5);
 }

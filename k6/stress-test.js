@@ -28,6 +28,9 @@ export default function () {
   if (!passed && res) {
     console.log(`Failed request - Status: ${res.status}`);
   }
+  // ยิง /api/cpu ด้วย (กิน CPU ดูกราฟ)
+  const cpuRes = http.get(`${BASE_URL}/api/cpu?duration=2000`);
+  check(cpuRes, { 'cpu status 200': (r) => r != null && r.status === 200 });
   sleep(1);
 }
 

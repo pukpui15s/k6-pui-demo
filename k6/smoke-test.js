@@ -54,6 +54,10 @@ export default function () {
     'users มี data': safeUsersData,
   });
 
+  // ทดสอบ route กิน CPU (ดูกราฟใน Grafana)
+  const cpuRes = http.get(`${BASE_URL}/api/cpu?duration=1000`);
+  check(cpuRes, { 'cpu status 200': safeStatus200 });
+
   sleep(1);
 }
 
