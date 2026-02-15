@@ -1,0 +1,25 @@
+K6 - คำสั่งที่ใช้รัน tests
+==========================
+
+ให้รัน Backend ก่อน (npm start) แล้วค่อยรันคำสั่งด้านล่าง
+
+--- Smoke Test (ทดสอบพื้นฐาน) ---
+k6 run k6/smoke-test.js -e BASE_URL="http://localhost:3000"
+
+--- Load Test (ทดสอบโหลดปกติ) ---
+k6 run k6/load-test.js -e BASE_URL="http://localhost:3000"
+
+--- Stress Test (ทดสอบความอดทน) ---
+k6 run k6/stress-test.js -e BASE_URL="http://localhost:3000"
+
+--- Spike Test (ทดสอบโหลดเพิ่มฉับพลัน) ---
+k6 run k6/spike-test.js -e BASE_URL="http://localhost:3000"
+
+--- Smoke + Load ---
+k6 run k6/smoke-test.js -e BASE_URL="http://localhost:3000" && k6 run k6/load-test.js -e BASE_URL="http://localhost:3000"
+
+--- เปลี่ยน URL (ทดสอบ server อื่น) ---
+BASE_URL=https://api.example.com k6 run k6/smoke-test.js
+
+Windows PowerShell:
+$env:BASE_URL="https://api.example.com"; k6 run k6/smoke-test.js

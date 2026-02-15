@@ -1,0 +1,6 @@
+# === กำหนด windows_exporter (Right-click PowerShell -> Run as administrator แล้วรัน) ===
+# powershell -ExecutionPolicy Bypass -File "c:\tester-demo\k6\config-windows-exporter.ps1"
+
+# === คำสั่ง k6 ===
+K6_PROMETHEUS_RW_SERVER_URL="http://localhost:9090/api/v1/write" \
+k6 run -o experimental-prometheus-rw -e BASE_URL="http://localhost:3000" k6/smoke-test.js
